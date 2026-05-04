@@ -5,25 +5,15 @@
 package edu.faculty.pokrivenost.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 
 /**
  *
  * @author Igor
  */
-@Embeddable
 public class PredajePK implements Serializable {
 
-    @Basic(optional = false)
-    @Column(name = "predmet_id")
     private long predmetId;
-    
-    @Basic(optional = false)
-    @Column(name = "oblik_nastave_id")
     private long oblikNastaveId;
-    
-    @Basic(optional = false)
-    @Column(name = "nastavno_osoblje_id")
     private long nastavnoOsobljeId;
 
     public PredajePK() {
@@ -61,35 +51,24 @@ public class PredajePK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (int) predmetId;
-        hash += (int) oblikNastaveId;
-        hash += (int) nastavnoOsobljeId;
-        return hash;
+        return java.util.Objects.hash(predmetId, oblikNastaveId, nastavnoOsobljeId);
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PredajePK)) {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PredajePK that)) {
             return false;
         }
-        PredajePK other = (PredajePK) object;
-        if (this.predmetId != other.predmetId) {
-            return false;
-        }
-        if (this.oblikNastaveId != other.oblikNastaveId) {
-            return false;
-        }
-        if (this.nastavnoOsobljeId != other.nastavnoOsobljeId) {
-            return false;
-        }
-        return true;
+        return predmetId == that.predmetId
+                && oblikNastaveId == that.oblikNastaveId
+                && nastavnoOsobljeId == that.nastavnoOsobljeId;
     }
 
     @Override
     public String toString() {
         return "edu.faculty.pokrivenost.entity.PredajePK[ predmetId=" + predmetId + ", oblikNastaveId=" + oblikNastaveId + ", nastavnoOsobljeId=" + nastavnoOsobljeId + " ]";
     }
-    
 }

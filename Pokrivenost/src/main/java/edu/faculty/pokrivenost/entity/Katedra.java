@@ -6,7 +6,7 @@ package edu.faculty.pokrivenost.entity;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  *
@@ -24,6 +24,7 @@ public class Katedra implements Serializable {
     @Column(name = "id")
     private Long id;
     
+    // TODO: Bolje samo naziv, promeni i u bazi
     @Basic(optional = false)
     @Column(name = "naziv_katedre")
     private String nazivKatedre;

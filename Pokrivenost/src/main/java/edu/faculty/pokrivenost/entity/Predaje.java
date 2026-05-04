@@ -6,7 +6,8 @@ package edu.faculty.pokrivenost.entity;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.util.Objects;
 
 /**
  *
@@ -14,75 +15,45 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "predaje")
+@IdClass(PredajePK.class)
 @NamedQueries({
     @NamedQuery(name = "Predaje.findAll", query = "SELECT p FROM Predaje p")})
 public class Predaje implements Serializable {
+    
+    // Hibernate ne moze ispravno da mapira Embeddable slozeni kljuc, problem mu predstavlja redosled propertija
+    // S druge strane, IdClass ne zadaje takve probleme
+    
+    @Id
+    @Column(name = "predmet_id")
+    private long predmetId;
 
-    @EmbeddedId
-    protected PredajePK predajePK;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "predaje")
-    private List<SkolskaGodinaPredaje> skolskaGodinaPredajeList;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "predaje1")
-    private List<SkolskaGodinaPredaje> skolskaGodinaPredajeList1;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "predaje2")
-    private List<SkolskaGodinaPredaje> skolskaGodinaPredajeList2;
-    
-    @JoinColumn(name = "predmet_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @Id
+    @Column(name = "oblik_nastave_id")
+    private long oblikNastaveId;
+
+    @Id
+    @Column(name = "nastavno_osoblje_id")
+    private long nastavnoOsobljeId;
+
     @ManyToOne(optional = false)
+    @JoinColumn(name = "predmet_id", insertable = false, updatable = false)
     private Predmet predmet;
-    
-    @JoinColumn(name = "oblik_nastave_id", referencedColumnName = "id", insertable = false, updatable = false)
+
     @ManyToOne(optional = false)
+    @JoinColumn(name = "oblik_nastave_id", insertable = false, updatable = false)
     private OblikNastave oblikNastave;
-    
-    @JoinColumn(name = "nastavno_osoblje_id", referencedColumnName = "id", insertable = false, updatable = false)
+
     @ManyToOne(optional = false)
+    @JoinColumn(name = "nastavno_osoblje_id", insertable = false, updatable = false)
     private NastavnoOsoblje nastavnoOsoblje;
 
     public Predaje() {
     }
 
-    public Predaje(PredajePK predajePK) {
-        this.predajePK = predajePK;
-    }
-
-    public Predaje(long predmetId, long oblikNastaveId, long nastavnoOsobljeId) {
-        this.predajePK = new PredajePK(predmetId, oblikNastaveId, nastavnoOsobljeId);
-    }
-
-    public PredajePK getPredajePK() {
-        return predajePK;
-    }
-
-    public void setPredajePK(PredajePK predajePK) {
-        this.predajePK = predajePK;
-    }
-
-    public List<SkolskaGodinaPredaje> getSkolskaGodinaPredajeList() {
-        return skolskaGodinaPredajeList;
-    }
-
-    public void setSkolskaGodinaPredajeList(List<SkolskaGodinaPredaje> skolskaGodinaPredajeList) {
-        this.skolskaGodinaPredajeList = skolskaGodinaPredajeList;
-    }
-
-    public List<SkolskaGodinaPredaje> getSkolskaGodinaPredajeList1() {
-        return skolskaGodinaPredajeList1;
-    }
-
-    public void setSkolskaGodinaPredajeList1(List<SkolskaGodinaPredaje> skolskaGodinaPredajeList1) {
-        this.skolskaGodinaPredajeList1 = skolskaGodinaPredajeList1;
-    }
-
-    public List<SkolskaGodinaPredaje> getSkolskaGodinaPredajeList2() {
-        return skolskaGodinaPredajeList2;
-    }
-
-    public void setSkolskaGodinaPredajeList2(List<SkolskaGodinaPredaje> skolskaGodinaPredajeList2) {
-        this.skolskaGodinaPredajeList2 = skolskaGodinaPredajeList2;
+    public Predaje(Predmet predmet, OblikNastave oblikNastave, NastavnoOsoblje nastavnoOsoblje) {
+        this.predmet = predmet;
+        this.oblikNastave = oblikNastave;
+        this.nastavnoOsoblje = nastavnoOsoblje;
     }
 
     public Predmet getPredmet() {
@@ -111,27 +82,29 @@ public class Predaje implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (predajePK != null ? predajePK.hashCode() : 0);
-        return hash;
+        return Objects.hash(predmet, oblikNastave, nastavnoOsoblje);
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Predaje)) {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Predaje other)) {
             return false;
         }
-        Predaje other = (Predaje) object;
-        if ((this.predajePK == null && other.predajePK != null) || (this.predajePK != null && !this.predajePK.equals(other.predajePK))) {
-            return false;
-        }
-        return true;
+        return predmet.equals(other.predmet)
+                && oblikNastave.equals(other.oblikNastave)
+                && nastavnoOsoblje.equals(other.nastavnoOsoblje);
     }
 
     @Override
     public String toString() {
-        return "edu.faculty.pokrivenost.entity.Predaje[ predajePK=" + predajePK + " ]";
+        return "Predaje{"
+                + "predmet=" + predmet
+                + ", oblikNastave=" + oblikNastave
+                + ", nastavnoOsoblje=" + nastavnoOsoblje
+                + '}';
     }
-    
+
 }

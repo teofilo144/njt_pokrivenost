@@ -6,7 +6,7 @@ package edu.faculty.pokrivenost.entity;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  *
